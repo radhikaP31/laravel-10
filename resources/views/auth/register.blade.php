@@ -20,10 +20,7 @@
         <div class="mt-4">
             <x-input-label for="password" :value="__('Password')" />
 
-            <x-text-input id="password" class="block mt-1 w-full"
-                            type="password"
-                            name="password"
-                            required autocomplete="new-password" />
+            <x-text-input id="password" class="block mt-1 w-full" type="password" name="password" required autocomplete="new-password" />
 
             <x-input-error :messages="$errors->get('password')" class="mt-2" />
         </div>
@@ -32,11 +29,21 @@
         <div class="mt-4">
             <x-input-label for="password_confirmation" :value="__('Confirm Password')" />
 
-            <x-text-input id="password_confirmation" class="block mt-1 w-full"
-                            type="password"
-                            name="password_confirmation" required autocomplete="new-password" />
+            <x-text-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation" required autocomplete="new-password" />
 
             <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+        </div>
+        <div class="form-group mt-4 mb-4">
+            <div class="captcha">
+                <span>{!! captcha_img() !!}</span>
+                <button type="button" class="btn btn-danger" class="reload" id="reload">
+                    &#x21bb;
+                </button>
+            </div>
+            <x-input-error :messages="$errors->get('captcha')" class="mt-2" />
+        </div>
+        <div class="form-group mb-4">
+            <input id="captcha" type="text" class="form-control" placeholder="Enter Captcha" name="captcha">
         </div>
 
         <div class="flex items-center justify-end mt-4">
@@ -49,4 +56,15 @@
             </x-primary-button>
         </div>
     </form>
+    <script type="text/javascript">
+        $('#reload').click(function() {
+            $.ajax({
+                type: 'GET',
+                url: 'reload-captcha',
+                success: function(data) {
+                    $(".captcha span").html(data.captcha);
+                }
+            });
+        });
+    </script>
 </x-guest-layout>
