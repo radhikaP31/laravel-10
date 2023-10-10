@@ -27,8 +27,10 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-    Route::get('/home', [HomeController::class, 'getProducts'])->name('homepage');
-    Route::post('/filterProduct', [HomeController::class, 'getFilteredProducts'])->name('filterProduct');
+    Route::any('/home', [HomeController::class, 'getProducts'])->name('homepage');
+    Route::post('/add-to-cart', [HomeController::class, 'addToCart'])->name('addToCart');
+    Route::get('/cart', [HomeController::class, 'getUserCartData'])->name('getCart');
+    /* Route::post('/filterProduct', [HomeController::class, 'getFilteredProducts'])->name('filterProduct'); */
 });
 
 require __DIR__.'/auth.php';

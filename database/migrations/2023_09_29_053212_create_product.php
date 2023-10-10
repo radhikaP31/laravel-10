@@ -19,6 +19,7 @@ return new class extends Migration
             $table->text('description')->nullable();
             $table->string('image', '50')->nullable();
             $table->string('tag', '100')->nullable();
+            $table->integer('quantity')->nullable();
             $table->enum('status', ['Active', 'Pending'])->default('Active');
             $table->tinyInteger('is_deleted')->default(0);
             $table->timestamps();
