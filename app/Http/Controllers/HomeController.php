@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Events\ItemAddToCart;
 use App\Models\Cart;
 use App\Models\Products;
 use Illuminate\Http\Request;
@@ -95,10 +96,8 @@ class HomeController extends Controller
                 ->withInput();
         }
 
-        // update product quantity
-        $productData = Products::find($productId);
-        $productData->quantity = $productData->quantity - $quantity;
-        $productData->save();
+        //call to event for update inventory
+        ItemAddToCart::dispatch($quantity, $productId);;
 
         // add data in cart table
         if($cartItem = Cart::where('user_id', $userId)->where('product_id', $productId)->first()) {
