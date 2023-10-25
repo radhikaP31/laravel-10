@@ -26,9 +26,12 @@
                         <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
                             <td class="px-6 py-4">{{ $key+1; }}</td>
                             <td class="px-6 py-4">{{ $product->product['name'] }}</td>
-                            <td class="px-6 py-4"><input type="number" step="1" min="1" max="{{$product['quantity']}}" name="quantity" value="{{$product['quantity']}}" title="Qty" class="input-text qty text mt-3" size="4" pattern="" inputmode="" style="width: 40%;height: 0%;" data-product_id="{{$product['id']}}" data-qty="{{$product['quantity']}}"></td>
+                            <td class="px-6 py-4"><input type="number" step="1" min="1" max="{{$product['quantity']}}" name="quantity-{{ $product['id'] }}" value="{{$product['quantity']}}" title="Qty" class="input-text qty text mt-3" size="4" pattern="" inputmode="" style="width: 40%;height: 0%;" data-product_id="{{$product['id']}}" data-qty="{{$product['quantity']}}"></td>
                             <td class="px-6 py-4">{{ $product['quantity'] * $product['price'] }}</td>
-                            <td class="px-6 py-4">Update | Delete</td>
+                            <td class="px-6 py-4">
+                                <button name="updateCartItem" class="updateCartItem" data-cart-id="{{ $product['id'] }}"> Update </button> |
+                                <button nmae="deleteCartItem" class="deleteCartItem" data-cart-id="{{ $product['id'] }}">Delete</button>
+                            </td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -37,3 +40,41 @@
         </div>
     </div>
 </x-app-layout>
+<script>
+    $(function() {
+        $('.updateCartItem').on('click', function() {
+            var cartItemId = $(this).data("cart-id");
+            $.ajax({
+                type: "POST",
+                url: "updateItem",
+                data: {
+                    _token: "{{ csrf_token() }}",
+                    cartItemId: cartItemId,
+                    quantity: $("input[name=quantity-" + cartItemId + "]").val(),
+                },
+                success: function(data) {
+                    console.log(data);
+                    // Handle the response from the controller
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                }
+            });
+        });
+        $('.deleteCartItem').on('click', function() {
+            var cartItemId = $(this).data("cartId");
+            $.ajax({
+                url: 'deleteItem',
+                type: 'POST',
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                },
+                data: {
+                    cartItemId: cartItemId,
+                    quantity: $("input[name=quantity-" + cartItemId + "]").val(),
+                },
+                dataType: 'json'
+            });
+        });
+    });
+</script>

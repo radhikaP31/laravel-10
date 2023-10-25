@@ -97,7 +97,7 @@ class HomeController extends Controller
         }
 
         //call to event for update inventory
-        ItemAddToCart::dispatch($quantity, $productId);;
+        ItemAddToCart::dispatch($quantity, $productId);
 
         // add data in cart table
         if($cartItem = Cart::where('user_id', $userId)->where('product_id', $productId)->first()) {
@@ -134,5 +134,39 @@ class HomeController extends Controller
 
         return view('cart', compact('cartData'));
 
+    }
+
+    /**
+     * update cart item
+     */
+    public function updateCartItem(Request $request)
+    {
+        $userId = Auth::user()->id;
+        $cartId = $request->cartItemId;
+        $quantity = $request->quantity;
+        $cartData = Cart::with('product')->where('user_id', $userId)->first();
+
+        // call to event for update inventory
+        ItemAddToCart::dispatch($quantity, $cartData['product_id']);
+        
+        $cartData->update([
+            'quantity' => $quantity + $cartData['quantity'],
+        ]);
+
+        return view('cart', compact('cartData'));
+    }
+
+    /**
+     * delete cart item
+     */
+    public function deleteCartItem(Request $request)
+    {
+        $userId = Auth::user()->id;
+        $cartId = $request->cartId;
+        $quantity = $request->quantity;
+
+        $cartData = Cart::with('product')->where('user_id', $userId)->get();
+
+        return view('cart', compact('cartData'));
     }
 }

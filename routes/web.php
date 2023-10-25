@@ -32,6 +32,8 @@ Route::middleware('auth')->group(function () {
     Route::post('/home', [HomeController::class, 'getProducts'])->name('homepage');
     Route::post('/add-to-cart', [HomeController::class, 'addToCart'])->name('addToCart');
     Route::get('/cart', [HomeController::class, 'getUserCartData'])->name('getCart');
+    Route::post('/updateItem', [HomeController::class, 'updateCartItem'])->name('updateCartItem');
+    Route::post('/deleteItem', [HomeController::class, 'deleteCartItem'])->name('deleteCartItem');
     Route::get('/helper', [HelpersController::class, 'arrayHelperFunction'])->name('helper');
     /* Route::post('/filterProduct', [HomeController::class, 'getFilteredProducts'])->name('filterProduct'); */
 });
